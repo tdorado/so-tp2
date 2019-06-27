@@ -402,3 +402,7 @@ int scanf(const char *format, ...)
 void showMemoryNodes(){
     systemCall(SHOW_MEMORY_NODES, 0, 0, 0, 0, 0);
 }
+
+void sleep(unsigned long ticks){
+    systemCall(SLEEP, ticks, 0, 0, 0, 0);
+}

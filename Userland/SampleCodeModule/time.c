@@ -2,6 +2,14 @@
 #include <stdio.h>
 #include <systemCall.h>
 
+#define SECONDS_REGISTER 0x00
+#define MINUTES_REGISTER 0x02
+#define HOUR_REGISTER 0x04
+#define WEEKDAY_REGISTER 0x06
+#define DAY_REGISTER 0x07
+#define MONTH_REGISTER 0x08
+#define YEAR_REGISTER 0x09
+
 static int UTC = -3;
 
 static const int monthsDays[12] = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
@@ -9,37 +17,37 @@ static const int lastDayMonths[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30
 
 int getSecond()
 {
-    return (int)systemCall(GET_TIME, 0, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, SECONDS_REGISTER, 0, 0, 0, 0);
 }
 
 int getMinute()
 {
-    return (int)systemCall(GET_TIME, 2, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, MINUTES_REGISTER, 0, 0, 0, 0);
 }
 
 int getHour()
 {
-    return (int)systemCall(GET_TIME, 4, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, HOUR_REGISTER, 0, 0, 0, 0);
 }
 
 int getWeekDay()
 {
-    return (int)systemCall(GET_TIME, 6, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, WEEKDAY_REGISTER, 0, 0, 0, 0);
 }
 
 int getDay()
 {
-    return (int)systemCall(GET_TIME, 7, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, DAY_REGISTER, 0, 0, 0, 0);
 }
 
 int getMonth()
 {
-    return (int)systemCall(GET_TIME, 8, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, MONTH_REGISTER, 0, 0, 0, 0);
 }
 
 int getYear()
 {
-    return (int)systemCall(GET_TIME, 9, 0, 0, 0, 0) + 2000;
+    return (int)systemCall(GET_TIME, YEAR_REGISTER, 0, 0, 0, 0) + 2000;
 }
 
 void getAllTimesForUTC(int times[7], int actualUTC)

@@ -16,6 +16,7 @@
 #define PAINT_PIXEL_BACKGROUND 10
 #define SET_CHAR_COLOR 11
 #define SHOW_MEMORY_NODES 12
+#define SLEEP 13
 
 uint64_t systemCall(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
 

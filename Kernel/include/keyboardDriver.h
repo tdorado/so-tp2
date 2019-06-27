@@ -1,7 +1,7 @@
 #ifndef KEYBOARD_DRIVER_H
 #define KEYBOARD_DRIVER_H
 
-#include <defs.h>
+#include <lib.h>
 
 #define BUFFER_SIZE 128
 

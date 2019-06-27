@@ -28,5 +28,6 @@ int scanf(const char *format, ...);
 int readLine(char buffer[BUFFER_SIZE]);
 void clearWorkSpace();
 void showMemoryNodes();
+void sleep(unsigned long ticks);
 
 #endif

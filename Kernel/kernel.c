@@ -4,6 +4,8 @@
 #include <idtLoader.h>
 #include <videoDriver.h>
 #include <memoryManager.h>
+#include <process.h>
+#include <scheduler.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -39,15 +41,17 @@ void *initializeKernelBinary()
 
 	loadModules(&endOfKernelBinary, moduleAddresses);
 	clearBSS(&bss, &endOfKernel - &bss);
-	loadVideo(videoAddress);
-	loadMemoryManager(memoryAddress, 1024*1024*50); // 50MB
+	initMemoryManager(memoryAddress, 1024*1024*50); // 50MB
+	initVideo(videoAddress);
+	initProcesses();
+	initScheduler();
 	loadIdt();
 
 	return getStackBase();
 }
 
 void init(){
-	((EntryPoint)sampleCodeModuleAddress)();
+	newProcess((uint64_t)sampleCodeModuleAddress, "shell", 1, 3);
 }
 
 int main()

@@ -3,6 +3,9 @@ GLOBAL _ioWrite
 
 section .text
 
+; _ioRead -- Reads in port
+; IN:	RDI = port
+; OUT:	RAX = result from port read
 _ioRead:
 	push rbp
 	mov rbp, rsp
@@ -20,6 +23,10 @@ _ioRead:
 	pop rbp
 	ret
 
+; _ioWrite -- Writes in port
+; IN:	RDI = port
+;		RSI = data for port
+; OUT:	void
 _ioWrite:
 	push rbp
 	mov rbp, rsp

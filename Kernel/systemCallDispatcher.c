@@ -2,6 +2,7 @@
 #include <keyboardDriver.h>
 #include <videoDriver.h>
 #include <soundDriver.h>
+#include <timeDriver.h>
 #include <memoryManager.h>
 #include <lib.h>
 
@@ -18,6 +19,7 @@ static uint64_t setPixel(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 static uint64_t paintPixelBackGround(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
 static uint64_t setLetterColor(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
 static uint64_t showMemoryNodes(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
+static uint64_t sleep(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
 
 static uint64_t (*systemCall[])(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9) = {
 	getTime,			  //0
@@ -32,7 +34,8 @@ static uint64_t (*systemCall[])(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64
 	setPixel,			  //9
 	paintPixelBackGround, //10
 	setLetterColor,		  //11
-	showMemoryNodes		  //12
+	showMemoryNodes,	  //12
+	sleep				  //13
 };
 
 uint64_t systemCallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9)
@@ -109,5 +112,11 @@ static uint64_t setLetterColor(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_
 static uint64_t showMemoryNodes(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9)
 {
 	printMemoryNodes();
+	return 1;
+}
+
+static uint64_t sleep(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9)
+{
+	ticksDelay(rsi);
 	return 1;
 }

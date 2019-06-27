@@ -13,6 +13,12 @@ GLOBAL _exception1Handler
 
 GLOBAL _systemCallHandler
 
+GLOBAL _changeProcess
+GLOBAL _contextSwitchProcess
+GLOBAL _contextSwitchInterrupt
+
+EXTERN switchProcess
+
 EXTERN systemCallDispatcher
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
@@ -103,6 +109,11 @@ SECTION .text
 	mov al, 20h
 	out 20h, al
 
+	;context switcher
+	mov rdi, rsp
+	call switchProcess
+	mov rsp, rax
+
 	popState
 	iretq
 %endmacro
@@ -184,3 +195,20 @@ _haltCpu:
 	cli
 	hlt
 	ret
+
+_changeProcess:
+	mov rsp, rdi
+	popState
+	iretq
+
+_contextSwitchProcess:
+	int 70h
+	ret
+
+_contextSwitchInterrupt:
+	pushState
+	mov rdi, rsp
+	call switchProcess
+	mov rsp, rax
+	popState
+	iretq

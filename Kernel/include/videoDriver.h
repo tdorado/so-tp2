@@ -5,7 +5,7 @@
 
 #define MAX_NUMBER_LENGHT 256
 
-void loadVideo(void * vbeDir);
+void initVideo(void * vbeDir);
 int setActualPixel(unsigned int x, unsigned int y);
 int printPixel(unsigned int x, unsigned int y, unsigned char R, unsigned char G, unsigned char B);
 void printChar(unsigned char c);

@@ -34,6 +34,9 @@ void loadIdt()
   setupIdtEntry(0x20, (uint64_t)&_irq00Handler); // Timer
   setupIdtEntry(0x21, (uint64_t)&_irq01Handler); // Keyboard
 
+  //Context Switch
+  setupIdtEntry(0x70, (uint64_t)&_contextSwitchInterrupt); //context switch
+
   //System Calls
   setupIdtEntry(0x80, (uint64_t)&_systemCallHandler); // System Call
 

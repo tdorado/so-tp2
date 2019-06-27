@@ -56,7 +56,7 @@ static unsigned char backgroundG = 0;
 static unsigned char backgroundB = 0;
 static char buffer[MAX_NUMBER_LENGHT] = {0};
 
-void loadVideo(void * vbeDir){
+void initVideo(void * vbeDir){
 	vbeStruct = (vbe *)vbeDir;
 	printBackGround();
 }

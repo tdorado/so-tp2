@@ -21,4 +21,8 @@ extern void _picSlaveMask(uint8_t mask);
 //Termina la ejecución de la cpu.
 extern void _haltCpu(void);
 
+extern void _changeProcess(uint64_t stackPointer);
+extern void _contextSwitchProcess(void);
+extern void _contextSwitchInterrupt(void);
+
 #endif /* INTERRUPS_H */

@@ -1,5 +1,5 @@
 #include <memoryManager.h>
-#include <defs.h>
+#include <lib.h>
 #include <videoDriver.h>
 
 enum STATUS {P = 0, F = 1};
@@ -95,7 +95,7 @@ static node_t freeNode(node_t curr, void *memoryPointer){
     return curr;
 }
 
-void loadMemoryManager(void *memoryAddressLocation, uint64_t totalSize){
+void initMemoryManager(void *memoryAddressLocation, uint64_t totalSize){
     totalMemorySize = totalSize;
     root = memoryAddress = memoryAddressLocation;
 

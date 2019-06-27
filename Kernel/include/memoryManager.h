@@ -5,7 +5,7 @@
 
 /*función para inicializar la memoria dado un puntero inicial y el tamaño
 **total de la memoria*/
-void loadMemoryManager(void *memoryAddressLocation, uint64_t totalSize);
+void initMemoryManager(void *memoryAddressLocation, uint64_t totalSize);
 
 /*función que llama a find_first_fit con el nodo raíz y 
 **retorna el puntero del nodo adecuado*/

@@ -78,6 +78,7 @@ char *strncpy(char *destination, const char *source, long unsigned int n)
     *destination = '\0';
     return aux;
 }
+
 char *strcpy(char *destination, const char *source)
 {
     char *aux = destination;

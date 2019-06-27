@@ -1,9 +1,6 @@
 #ifndef DEFS_H
 #define DEFS_H
 
-#define EOF -1
-#define NULL 0
-
 /* Flags para derechos de acceso de los segmentos */
 #define ACS_PRESENT     0x80            /* segmento presente en memoria */
 #define ACS_CSEG        0x18            /* segmento de codigo */
