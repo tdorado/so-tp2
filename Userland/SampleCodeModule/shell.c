@@ -107,6 +107,10 @@ int managingCases(char *option)
     {
         clearWorkSpace();
     }
+    else if (strcmp(option, "printMemoryNodes") == 0)
+    {
+        showMemoryNodes();
+    }
     else if (strcmp(option, "exit") == 0)
     {
         return 1;

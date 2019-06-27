@@ -48,6 +48,9 @@ uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 static vbe *vbeStruct; //Sacado de sysvar.asm en Bootloader/Pure64/src
 static unsigned int actualX = 0;
 static unsigned int actualY = 0;
+static unsigned int charR = 255;
+static unsigned int charG = 255;
+static unsigned int charB = 255;
 static unsigned char backgroundR = 0;
 static unsigned char backgroundG = 0;
 static unsigned char backgroundB = 0;
@@ -83,7 +86,7 @@ int printPixel(unsigned int x, unsigned int y, unsigned char R, unsigned char G,
 	return 0;
 }
 
-void printChar(unsigned char c, unsigned char R, unsigned char G, unsigned char B)
+void printChar(unsigned char c)
 {
 	if (c == 0)
 	{
@@ -115,7 +118,7 @@ void printChar(unsigned char c, unsigned char R, unsigned char G, unsigned char 
 
 				if (charPixel % 2 == 1)
 				{
-					printPixel(actualX + x, actualY + y, R, G, B);
+					printPixel(actualX + x, actualY + y, charR, charG, charB);
 				}
 				else
 				{
@@ -193,17 +196,24 @@ void setBackGroundColor(unsigned char R, unsigned char G, unsigned char B)
 	backgroundB = B;
 }
 
+void setCharColor(unsigned char R, unsigned char G, unsigned char B)
+{
+	charR = R;
+	charG = G;
+	charB = B;
+}
+
 int paintPixelBackGroundColor(unsigned int x, unsigned int y)
 {
 	return printPixel(x, y, backgroundR, backgroundG, backgroundB);
 }
 
-void printString(const char *str, unsigned char R, unsigned char G, unsigned char B)
+void printString(const char *str)
 {
 	int i = 0;
 	while (str[i] != 0)
 	{
-		printChar(str[i++], R, G, B);
+		printChar(str[i++]);
 	}
 }
 
@@ -225,7 +235,51 @@ void printBin(uint64_t value)
 void printBase(uint64_t value, uint32_t base)
 {
 	uintToBase(value, buffer, base);
-	printString(buffer, 255, 255, 255);
+	printString(buffer);
+}
+
+void printStringError(const char *str)
+{
+	unsigned char auxBackR = backgroundR;
+	unsigned char auxBackG = backgroundG;
+	unsigned char auxBackB = backgroundB;
+
+	unsigned char auxCharR = charR;
+	unsigned char auxCharG = charG;
+	unsigned char auxCharB = charB;
+
+	setBackGroundColor(255, 0, 0);
+	setCharColor(255, 255, 255);
+
+	int i = 0;
+	while (str[i] != 0)
+	{
+		printChar(str[i++]);
+	}
+
+	setBackGroundColor(auxBackR, auxBackG, auxBackB);
+	setCharColor(auxCharR, auxCharG, auxCharB);
+}
+
+void printDecError(uint64_t value)
+{
+	printBaseError(value, 10);
+}
+
+void printHexError(uint64_t value)
+{
+	printBaseError(value, 16);
+}
+
+void printBinError(uint64_t value)
+{
+	printBaseError(value, 2);
+}
+
+void printBaseError(uint64_t value, uint32_t base)
+{
+	uintToBase(value, buffer, base);
+	printStringError(buffer);
 }
 
 uint32_t uintToBase(uint64_t value, char *buffer, uint32_t base)

@@ -9,37 +9,37 @@ static const int lastDayMonths[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30
 
 int getSecond()
 {
-    return (int)systemCall(0, 0, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, 0, 0, 0, 0, 0);
 }
 
 int getMinute()
 {
-    return (int)systemCall(0, 2, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, 2, 0, 0, 0, 0);
 }
 
 int getHour()
 {
-    return (int)systemCall(0, 4, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, 4, 0, 0, 0, 0);
 }
 
 int getWeekDay()
 {
-    return (int)systemCall(0, 6, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, 6, 0, 0, 0, 0);
 }
 
 int getDay()
 {
-    return (int)systemCall(0, 7, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, 7, 0, 0, 0, 0);
 }
 
 int getMonth()
 {
-    return (int)systemCall(0, 8, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, 8, 0, 0, 0, 0);
 }
 
 int getYear()
 {
-    return (int)systemCall(0, 9, 0, 0, 0, 0) + 2000;
+    return (int)systemCall(GET_TIME, 9, 0, 0, 0, 0) + 2000;
 }
 
 void getAllTimesForUTC(int times[7], int actualUTC)

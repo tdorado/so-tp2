@@ -40,7 +40,7 @@ void *initializeKernelBinary()
 	loadModules(&endOfKernelBinary, moduleAddresses);
 	clearBSS(&bss, &endOfKernel - &bss);
 	loadVideo(videoAddress);
-	loadMemoryManager(memoryAddress);
+	loadMemoryManager(memoryAddress, 1024*1024*50); // 50MB
 	loadIdt();
 
 	return getStackBase();

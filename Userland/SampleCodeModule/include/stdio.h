@@ -27,5 +27,6 @@ int sscanf(const char *str, const char *format, ...);
 int scanf(const char *format, ...);
 int readLine(char buffer[BUFFER_SIZE]);
 void clearWorkSpace();
+void showMemoryNodes();
 
 #endif

@@ -44,3 +44,6 @@ Image/*.vmdk
 
 # vscode
 .vscode
+
+# .tex
+tstex_modules

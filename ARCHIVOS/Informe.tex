@@ -1,0 +1,125 @@
+\usepackage{listings}
+\usepackage{titlepic}
+\documentclass[12pt]{article}
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{subfig}
+\usepackage{makecell}
+
+
+\begin{document}
+\begin{titlepage}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} 
+\center 
+%opening
+
+\textsc{\LARGE ITBA}\\[1.5cm] 
+\textsc{\Large Sistemas Operativos}\\[0.5cm] 
+\textsc{\large Profesores: Horacio Merovich y Ariel Godio}\\[0.5cm] 
+
+\HRule \\[0.4cm]
+{ \huge \bfseries Trabajo Pr\'actico 1 \\ Inter Process Communication }\\[0.4cm] 
+\HRule \\[1.5cm]
+ 
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Alumnos:}\\
+Lautaro Pinilla \\
+Micaela Banfi \\
+Joaqu\'in Battilana \\
+Tom\'as Dorado \\
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{} \\
+57504 \\
+57293 \\
+57683 \\
+56594 \\
+\end{flushright}
+\end{minipage}\\[2cm]
+
+
+{\large 8 de Abril de 2019}\\[2cm]
+
+%%quiero incluir este logo mas pequenio pero no puedo 
+%%\includegraphics{logo.png}\\[1cm]
+
+\vfil
+\end{titlepage}
+
+\section{Introduccion}
+El siguiente trabajo práctico consiste en aprender a utilizar los distintos tipos de IPCs presentes en un sistema POSIX. Para ello se implementará un sistema que distribuirá tareas de cálculo pesadas entre varios pares.
+
+
+\section{Especificaciones t\'ecnicas}
+
+Las instrucciones de compilaci\'on y ejecuci\'on pueden encontrarse en el README. El trabajo pr\'actico fue siempre compilado y ejecutado con la ayuda de un archivo makefile inclu\'ido en el repositorio como parte del trabajo pr\'actico
+
+
+
+\section{Decisiones tomadas durante el desarrollo}
+
+\subsection{Memoria Compartida}
+    Se decidi\'o utilizar una memoria compartida para el paso de informaci\'on entre la aplicaci\'on y la vista, ya que asi lo requeria el trabajo pr\'actico. Sin embargo, presenta varias ventajas, por ejemplo, la r\'apida escritura sobre la misma, una vez que est\'a definida. A su vez presenta limitaciones, descriptas en la correspondiente secci\'on. 
+
+\subsection{Pipes}
+	Para la comunicaci\'on entre la aplicaci\'on y sus esclavos se utilizaron tuber\'ias o pipes. Se crearon un par de pipes de ida y de vuelta por cada esclavo, por lo que la comunicaci\'on con cada uno es completamente independiente.
+	Application al crear al slave le manda por el pipe de ida un n\'umero (carga inicial) para que sepa cuantos archivos van a venir primero y luego le manda esos archivos. Despu\'es empieza a mandar de a 1. A su vez el hijo primero consume el n\'umero y sus archivos y despues comienza a leer de a una, para lo que manda un -1 al padre cada vez que esta listo para recibir mas archivos.
+	Para que el padre pueda saber cuando los hijos ya procesaron el archivo que les mando y lo mandaron por el pipe utilizamos select.
+	Cuando el padre queda sin archivos para mandar, env\'ia un 0 a cada hijo para que al recibirlo termine su proceso.
+
+\subsection{Sem\'aforos} 
+    Utilizamos sem\'aforos para sincronizar la aplicaci\'on y la vista. El principal problema que ten\'iamos era que necesit\'abamos una forma eficiente de avisarle a la vista cuando hay nuevos elementos para que lea en la memoria compartida. Entonces fue cuando decidimos utilizar un sem\'aforo que permite que el proceso vista quede bloqueado hasta que la aplicaci\'on escriba un nuevo elemento y accione el sem\'aforo que va a permitir que la vista pase a ser estar corriendo de nuevo.
+	
+
+	
+\section{Limitaciones}
+
+\subsection{Memoria compartida}
+    Una de las limitaciones que presenta el trabajo pr\'actico es que soporta hasta 1000 hashes. Esto se debe a que, por facilidad, en vez de crear el tamaño de la memoria compartida en funci\'on de la cantidad de archivos, se crea un tamaño fijo.
+\subsection{Select}
+    Una de las limitaciones de select es que los file descriptor  que se puede usar tienen que ser menores a FD\_SETSIZE, definido en la libreria. Para no tener esta limitacion en vez de select se puede utilizar poll, pero no nos pareci\'o necesario para este trabajo pr\'actico debido a que FD\_SETSIZE en docker vale 1024 y para llegar a este n\'umero tendriamos que tener mas o menos 500 esclavos, cosa que no va a pasar.
+    
+\section{Problemas encontrados en el desarrollo y posibles soluciones}
+
+\subsection{Uso compartido de punteros entre procesos}
+Un problema con el que nos encontramos fue el uso compartido de punteros entre procesos. Inicialmente, por cuestiones de eficiencia espacial y para simplificar otros c\'alculos, cre\'iamos que la mejor manera de manejarse con los strings de formato hash nombre archivo era guardando un puntero char * que contuviera el string.\\
+
+Esto causaba segmentation faults ya que el proceso Vision estaba accediendo a un puntero que correspond\'ia a una zona de memoria fuera de la que le correspond\'ia.\\
+
+La soluci\'on que encontramos para este problema fue de abandonar la idea de compartir punteros y simplemente hacer una "copia profunda" del string.
+
+\subsection{Uso compartido de punteros en zona compartida}
+Otro problema que tuvimos, similar al anteriormente mencionado fue que quer\'iamos tener un puntero al pr\'oximo elemento a agregar para facilitar la escritura y lectura. Pronto nos dimos cuenta que cuando nunca \'ibamos a poder crear este puntero ya que cada proceso accede a la memoria compartida virtualmente, con lo que sus direcciones a la memoria compartida son distintas.\\
+
+La soluci\'on que encontramos para esto fue utilizar un valor de tipo size\_t como offset de la memoria compartida, permiti\'endonos la facilidad de acceder al \'ultimo elemento sin los problemas mencionados.
+
+\section{Citas a c\'odigos externos usados}
+
+Algunos de los archivos extra\'idos de internet fueron modificados para adaptarlos al uso que se les requer\'ia
+
+\begin{center}
+	\begin{table} [!h]
+	\begin{tabular}{ |c|c| }
+		\hline
+		Archivo & Link \\
+		\hline
+		Queue.c & \makecell{https://codereview.stackexchange.com/questions/141238/ \\ implementing-a-generic-queue-in-c} \\
+		\hline
+		QueueTest.c & \makecell{ https://codereview.stackexchange.com/questions/141238/ \\ implementing-a-generic-queue-in-c} \\
+		\hline
+		Tasteful.c & https://github.com/lpinilla/Tasteful \\
+		\hline
+	\end{tabular}
+
+	\end{table}
+\end{center}
+	
+
+\end{document}

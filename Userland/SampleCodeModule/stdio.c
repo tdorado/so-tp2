@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <systemCall.h>
 
-static unsigned int charR = 255;
-static unsigned int charG = 255;
-static unsigned int charB = 255;
 static char buffer[BUFFER_SIZE];
 
 int abs(int a)
@@ -17,39 +14,37 @@ int abs(int a)
 
 void beepSound()
 {
-    systemCall(3, 0, 0, 0, 0, 0);
+    systemCall(BEEP_SOUND, 0, 0, 0, 0, 0);
 }
 
 void putPixel(unsigned int x, unsigned int y, unsigned char red, unsigned char green, unsigned char blue)
 {
-    systemCall(7, (uint64_t)x, (uint64_t)y, (uint64_t)red, (uint64_t)green, (uint64_t)blue);
+    systemCall(WRITE_PIXEL, (uint64_t)x, (uint64_t)y, (uint64_t)red, (uint64_t)green, (uint64_t)blue);
 }
 
 void setPixel(unsigned int x, unsigned int y)
 {
-    systemCall(8, (uint64_t)x, (uint64_t)y, 0, 0, 0);
+    systemCall(SET_PIXEL, (uint64_t)x, (uint64_t)y, 0, 0, 0);
 }
 
 void printPixelBackGroundColor(unsigned int x, unsigned int y)
 {
-    systemCall(9, (uint64_t)x, (uint64_t)y, 0, 0, 0);
+    systemCall(PAINT_PIXEL_BACKGROUND, (uint64_t)x, (uint64_t)y, 0, 0, 0);
 }
 
 void clearWorkSpace()
 {
-    systemCall(5, 0, 0, 0, 0, 0);
+    systemCall(CLEAR_BACKGROUND, 0, 0, 0, 0, 0);
 }
 
 void setBackGroundColor(unsigned int red, unsigned int green, unsigned int blue)
 {
-    systemCall(6, (uint64_t)red, (uint64_t)green, (uint64_t)blue, 0, 0);
+    systemCall(SET_BACKGROUND, (uint64_t)red, (uint64_t)green, (uint64_t)blue, 0, 0);
 }
 
 void setCharColor(unsigned int red, unsigned int green, unsigned int blue)
 {
-    charR = red;
-    charG = green;
-    charB = blue;
+    systemCall(SET_CHAR_COLOR, (uint64_t)red, (uint64_t)green, (uint64_t)blue, 0, 0);
 }
 
 int getchar()
@@ -60,7 +55,7 @@ int getchar()
 void putchar(unsigned char c)
 {
     if (c != 0)
-        systemCall(2, (uint64_t)c, (uint64_t)charR, (uint64_t)charG, (uint64_t)charB, 0);
+        systemCall(WRITE_CHAR, (uint64_t)c, 0, 0, 0, 0);
 }
 
 void *malloc(long unsigned int size)
@@ -69,12 +64,12 @@ void *malloc(long unsigned int size)
     {
         return NULL;
     }
-    return (void *)systemCall(4, (uint64_t)size, 0, 0, 0, 0);
+    return (void *)systemCall(MEM_ALLOC, (uint64_t)size, 0, 0, 0, 0);
 }
 
 void free(void *pointer)
 {
-    return;
+    systemCall(MEM_FREE, (uint64_t)pointer, 0, 0, 0, 0);
 }
 
 int printf(const char *str, ...)
@@ -402,4 +397,8 @@ int scanf(const char *format, ...)
 
     va_end(args);
     return result;
+}
+
+void showMemoryNodes(){
+    systemCall(SHOW_MEMORY_NODES, 0, 0, 0, 0, 0);
 }

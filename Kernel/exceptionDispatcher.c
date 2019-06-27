@@ -24,19 +24,19 @@ void exceptionDispatcher(uint64_t exception, uint64_t *states)
 
 static void zeroDivision(uint64_t *states)
 {
-	printString("ERROR: Division by zero exception number 0.", 255, 255, 255);
+	printStringError("ERROR: Division by zero exception number 0.");
 	printRegisters(states);
 }
 
 static void notImplemented(uint64_t *states)
 {
-	printString("ERROR: Not implemented exception.", 255, 255, 255);
+	printStringError("ERROR: Not implemented exception.");
 	printRegisters(states);
 }
 
 static void invalidOpCode(uint64_t *states)
 {
-	printString("ERROR: Invalid opcode exception number 6.", 255, 255, 255);
+	printStringError("ERROR: Invalid opcode exception number 6.");
 	printRegisters(states);
 }
 
@@ -45,8 +45,8 @@ static void printRegisters(uint64_t *states)
 	newLine();
 	for (int i = 0; i < 16; i++)
 	{
-		printString(registers[i], 255, 255, 255);
-		printDec(states[i]);
+		printStringError(registers[i]);
+		printDecError(states[i]);
 		newLine();
 	}
 }
