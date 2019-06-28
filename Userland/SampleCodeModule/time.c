@@ -17,37 +17,37 @@ static const int lastDayMonths[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30
 
 int getSecond()
 {
-    return (int)systemCall(GET_TIME, SECONDS_REGISTER, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, SECONDS_REGISTER, 0, 0, 0, 0, 0);
 }
 
 int getMinute()
 {
-    return (int)systemCall(GET_TIME, MINUTES_REGISTER, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, MINUTES_REGISTER, 0, 0, 0, 0, 0);
 }
 
 int getHour()
 {
-    return (int)systemCall(GET_TIME, HOUR_REGISTER, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, HOUR_REGISTER, 0, 0, 0, 0, 0);
 }
 
 int getWeekDay()
 {
-    return (int)systemCall(GET_TIME, WEEKDAY_REGISTER, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, WEEKDAY_REGISTER, 0, 0, 0, 0, 0);
 }
 
 int getDay()
 {
-    return (int)systemCall(GET_TIME, DAY_REGISTER, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, DAY_REGISTER, 0, 0, 0, 0, 0);
 }
 
 int getMonth()
 {
-    return (int)systemCall(GET_TIME, MONTH_REGISTER, 0, 0, 0, 0);
+    return (int)systemCall(GET_TIME, MONTH_REGISTER, 0, 0, 0, 0, 0);
 }
 
 int getYear()
 {
-    return (int)systemCall(GET_TIME, YEAR_REGISTER, 0, 0, 0, 0) + 2000;
+    return (int)systemCall(GET_TIME, YEAR_REGISTER, 0, 0, 0, 0, 0) + 2000;
 }
 
 void getAllTimesForUTC(int times[7], int actualUTC)

@@ -10,11 +10,13 @@
 #define MAX_PROCESSES 256
 
 typedef enum {P_READY, P_RUNNING, P_WAITING, P_TERMINATE} pstate_t;
+typedef enum {BACKGROUND, FOREGROUND} pground_t;
+typedef enum {PRIORITY_1=1, PRIORITY_2, PRIORITY_3, PRIORITY_4} ppriority_t;
 
 typedef struct processADT * process_t;
 
 void initProcesses();
-process_t createProcess(uint64_t processStart, char * name, int priority);
+process_t createProcess(uint64_t processStart, char * name, ppriority_t priority, pground_t ground);
 void deleteProcess(process_t process);
 void setState(process_t process, pstate_t state);
 void setStateId(uint64_t pid, pstate_t state);
@@ -24,9 +26,11 @@ void printProcess(process_t process);
 uint64_t getPid(process_t process);
 uint64_t getStackPointer(process_t process);
 pstate_t getStateId(uint64_t pid);
-void setForegroundProcess(uint64_t pid);
-int isCurrentProcessForeground();
+void setGroundProcess(uint64_t pid, pground_t ground);
+pground_t getCurrentGroundProcess();
+int getForegroundProcesses();
 void setCurrentProcessTerminate();
-int getPriority(process_t process);
+ppriority_t getPriority(process_t process);
+void setForegroundProcesses(int newForegroundProcesses);
 
 #endif

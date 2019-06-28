@@ -21,8 +21,6 @@ static void *const sampleDataModuleAddress = (void *)0x500000;
 static void *const memoryAddress = (void *)0x700000;
 static void *const videoAddress = (void *)0x5C00;
 
-typedef int (*EntryPoint)();
-
 void clearBSS(void *bssAddress, uint64_t bssSize)
 {
 	memset(bssAddress, 0, bssSize);
@@ -50,12 +48,8 @@ void *initializeKernelBinary()
 	return getStackBase();
 }
 
-void init(){
-	newProcess((uint64_t)sampleCodeModuleAddress, "shell", 1, 3);
-}
-
 int main()
 {
-	init();
+	newProcess((uint64_t)sampleCodeModuleAddress, "shell", PRIORITY_3, FOREGROUND);
 	return 0;
 }

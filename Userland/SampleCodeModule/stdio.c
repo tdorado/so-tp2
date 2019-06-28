@@ -14,48 +14,48 @@ int abs(int a)
 
 void beepSound()
 {
-    systemCall(BEEP_SOUND, 0, 0, 0, 0, 0);
+    systemCall(BEEP_SOUND, 0, 0, 0, 0, 0, 0);
 }
 
 void putPixel(unsigned int x, unsigned int y, unsigned char red, unsigned char green, unsigned char blue)
 {
-    systemCall(WRITE_PIXEL, (uint64_t)x, (uint64_t)y, (uint64_t)red, (uint64_t)green, (uint64_t)blue);
+    systemCall(WRITE_PIXEL, (uint64_t)x, (uint64_t)y, (uint64_t)red, (uint64_t)green, (uint64_t)blue, 0);
 }
 
 void setPixel(unsigned int x, unsigned int y)
 {
-    systemCall(SET_PIXEL, (uint64_t)x, (uint64_t)y, 0, 0, 0);
+    systemCall(SET_PIXEL, (uint64_t)x, (uint64_t)y, 0, 0, 0, 0);
 }
 
 void printPixelBackGroundColor(unsigned int x, unsigned int y)
 {
-    systemCall(PAINT_PIXEL_BACKGROUND, (uint64_t)x, (uint64_t)y, 0, 0, 0);
+    systemCall(PAINT_PIXEL_BACKGROUND, (uint64_t)x, (uint64_t)y, 0, 0, 0, 0);
 }
 
 void clearWorkSpace()
 {
-    systemCall(CLEAR_BACKGROUND, 0, 0, 0, 0, 0);
+    systemCall(CLEAR_BACKGROUND, 0, 0, 0, 0, 0, 0);
 }
 
 void setBackGroundColor(unsigned int red, unsigned int green, unsigned int blue)
 {
-    systemCall(SET_BACKGROUND, (uint64_t)red, (uint64_t)green, (uint64_t)blue, 0, 0);
+    systemCall(SET_BACKGROUND, (uint64_t)red, (uint64_t)green, (uint64_t)blue, 0, 0, 0);
 }
 
 void setCharColor(unsigned int red, unsigned int green, unsigned int blue)
 {
-    systemCall(SET_CHAR_COLOR, (uint64_t)red, (uint64_t)green, (uint64_t)blue, 0, 0);
+    systemCall(SET_CHAR_COLOR, (uint64_t)red, (uint64_t)green, (uint64_t)blue, 0, 0, 0);
 }
 
 int getchar()
 {
-    return systemCall(1, 0, 0, 0, 0, 0);
+    return systemCall(1, 0, 0, 0, 0, 0, 0);
 }
 
 void putchar(unsigned char c)
 {
     if (c != 0)
-        systemCall(WRITE_CHAR, (uint64_t)c, 0, 0, 0, 0);
+        systemCall(WRITE_CHAR, (uint64_t)c, 0, 0, 0, 0, 0);
 }
 
 void *malloc(long unsigned int size)
@@ -64,12 +64,12 @@ void *malloc(long unsigned int size)
     {
         return NULL;
     }
-    return (void *)systemCall(MEM_ALLOC, (uint64_t)size, 0, 0, 0, 0);
+    return (void *)systemCall(MEM_ALLOC, (uint64_t)size, 0, 0, 0, 0, 0);
 }
 
 void free(void *pointer)
 {
-    systemCall(MEM_FREE, (uint64_t)pointer, 0, 0, 0, 0);
+    systemCall(MEM_FREE, (uint64_t)pointer, 0, 0, 0, 0, 0);
 }
 
 int printf(const char *str, ...)
@@ -400,9 +400,9 @@ int scanf(const char *format, ...)
 }
 
 void showMemoryNodes(){
-    systemCall(SHOW_MEMORY_NODES, 0, 0, 0, 0, 0);
+    systemCall(SHOW_MEMORY_NODES, 0, 0, 0, 0, 0, 0);
 }
 
 void sleep(unsigned long ticks){
-    systemCall(SLEEP, ticks, 0, 0, 0, 0);
+    systemCall(SLEEP, ticks, 0, 0, 0, 0, 0);
 }

@@ -6,12 +6,13 @@
 
 typedef struct nodeADT *node_t;
 
-typedef struct nodeADT{
+typedef struct nodeADT
+{
     process_t element;
     node_t prev;
     node_t next;
     int quantum;
-}nodeADT;
+} nodeADT;
 
 static void setNextProcess();
 
@@ -22,15 +23,18 @@ static node_t firstProcess;
 static node_t lastProcess;
 static uint64_t numberOfProcesses;
 
-void initScheduler(){
+void initScheduler()
+{
     currentProcess = NULL;
     lastProcess = NULL;
     numberOfProcesses = 0;
 }
 
-void runProcess(process_t process){
+void runProcess(process_t process)
+{
     numberOfProcesses++;
-    if(lastProcess == NULL){
+    if (lastProcess == NULL)
+    {
         lastProcess = malloc(sizeof(nodeADT));
         lastProcess->element = process;
         lastProcess->next = lastProcess;
@@ -41,7 +45,8 @@ void runProcess(process_t process){
         setState(currentProcess->element, P_RUNNING);
         _changeProcess(getStackPointer(process));
     }
-    else{
+    else
+    {
         node_t aux = malloc(sizeof(nodeADT));
         aux->element = process;
         aux->next = lastProcess->next;
@@ -53,7 +58,13 @@ void runProcess(process_t process){
     }
 }
 
-void killCurrentProcess(){
+void killCurrentProcess()
+{
+
+    if (getCurrentGroundProcess() == FOREGROUND)
+    {
+        setForegroundProcesses(getForegroundProcesses() - 1);
+    }
 
     numberOfProcesses--;
 
@@ -61,7 +72,8 @@ void killCurrentProcess(){
     currentProcess->prev->next = currentProcess->next;
     currentProcess->next->prev = currentProcess->prev;
 
-    if(lastProcess == aux){
+    if (lastProcess == aux)
+    {
         lastProcess = aux->prev;
     }
 
@@ -73,33 +85,41 @@ void killCurrentProcess(){
     _changeProcess(getStackPointer(currentProcess->element));
 }
 
-static void setNextProcess(){
-    if((getPriority(currentProcess->element) % currentProcess->quantum) == 0){
+static void setNextProcess()
+{
+    if ((getPriority(currentProcess->element) % currentProcess->quantum) == 0)
+    {
         currentProcess->quantum = 1;
         currentProcess = currentProcess->next;
     }
-    else{
+    else
+    {
         currentProcess->quantum++;
         return;
     }
 
     pstate_t pstate = getState(currentProcess->element);
 
-    if(pstate == P_TERMINATE){
+    if (pstate == P_TERMINATE)
+    {
         killCurrentProcess();
     }
-    else if(pstate == P_WAITING){
+    else if (pstate == P_WAITING)
+    {
         setNextProcess();
     }
-    else if(pstate == P_READY){
+    else if (pstate == P_READY)
+    {
         setState(currentProcess->element, P_RUNNING);
     }
 }
 
 //Esto se llama desde el iqr handler que seria mas rapido que el timer creo, asi nos acercamos
 // lo mas posible a un quantum como pide la consigna
-uint64_t switchProcess(uint64_t stackPointer){
-    if(numberOfProcesses>1){
+uint64_t switchProcess(uint64_t stackPointer)
+{
+    if (numberOfProcesses > 1)
+    {
 
         setStackPointer(currentProcess->element, stackPointer);
 
@@ -107,28 +127,30 @@ uint64_t switchProcess(uint64_t stackPointer){
 
         return getStackPointer(currentProcess->element);
     }
-    else {
+    else
+    {
         return stackPointer;
     }
 }
 
-void printCurrentProcesses(){
+void printCurrentProcesses()
+{
     node_t aux = firstProcess;
-    for(int i = 0; i < numberOfProcesses; i++){
+    for (int i = 0; i < numberOfProcesses; i++)
+    {
         printProcess(aux->element);
         aux = aux->next;
     }
 }
 
-process_t getCurrentProcess(){
+process_t getCurrentProcess()
+{
     return (process_t)currentProcess->element;
 }
 
-uint64_t newProcess(uint64_t processStart, char * processName, int foreground, int priority){
-  process_t newProcess = createProcess(processStart, processName, priority);
-  if(foreground == 1){
-    setForegroundProcess(getPid(newProcess));
-  }
-  runProcess(newProcess);
-  return getPid(newProcess);
+uint64_t newProcess(uint64_t processStart, char *processName, ppriority_t priority, pground_t ground)
+{
+    process_t newProcess = createProcess(processStart, processName, priority, ground);
+    runProcess(newProcess);
+    return getPid(newProcess);
 }
