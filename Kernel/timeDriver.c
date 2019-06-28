@@ -20,7 +20,6 @@ int secondsElapsed()
 
 void secondsDelay(unsigned long secondsParam)
 {
-	_cli();
 	_sti();
 	unsigned long finalSecond = (ticks / 18) + secondsParam;
 	while ((ticks / 18) < finalSecond);
@@ -28,7 +27,6 @@ void secondsDelay(unsigned long secondsParam)
 
 void ticksDelay(unsigned long ticksParam)
 {
-	_cli();
 	_sti();
 	unsigned long finalTick = ticks + ticksParam;
 	while (ticks < finalTick);
