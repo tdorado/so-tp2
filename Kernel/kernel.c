@@ -50,6 +50,6 @@ void *initializeKernelBinary()
 
 int main()
 {
-	newProcess((uint64_t)sampleCodeModuleAddress, "shell", PRIORITY_3, FOREGROUND);
+	newProcess((uint64_t)sampleCodeModuleAddress, "shell", NULL, NULL, PRIORITY_3, FOREGROUND);
 	return 0;
 }

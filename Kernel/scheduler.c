@@ -148,9 +148,9 @@ process_t getCurrentProcess()
     return (process_t)currentProcess->element;
 }
 
-uint64_t newProcess(uint64_t processStart, char *processName, ppriority_t priority, pground_t ground)
+uint64_t newProcess(uint64_t processStart, char *processName, int argc, void ** argv, ppriority_t priority, pground_t ground)
 {
-    process_t newProcess = createProcess(processStart, processName, priority, ground);
+    process_t newProcess = createProcess(processStart, processName, argc, argv, priority, ground);
     runProcess(newProcess);
     return getPid(newProcess);
 }

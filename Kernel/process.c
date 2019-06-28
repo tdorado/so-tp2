@@ -46,8 +46,8 @@ typedef struct
 	uint64_t base;
 } stack_t;
 
-static uint64_t initStack(process_t process, uint64_t processStart, uint64_t stackPointer);
-static void processCaller(process_t process, uint64_t processStart);
+static uint64_t initStack(process_t process, uint64_t processStart, uint64_t stackPointer, int argc, void ** argv);
+static void processCaller(process_t process, uint64_t processStart, int argc, void ** argv);
 
 static uint64_t global_pid;
 static process_t allProcesses[MAX_PROCESSES];
@@ -63,7 +63,7 @@ void initProcesses()
 	}
 }
 
-process_t createProcess(uint64_t processStart, char *processName, ppriority_t priority, pground_t ground)
+process_t createProcess(uint64_t processStart, char *processName, int argc, void ** argv, ppriority_t priority, pground_t ground)
 {
 
 	process_t newProcess = (process_t)malloc(sizeof(*newProcess));
@@ -71,7 +71,7 @@ process_t createProcess(uint64_t processStart, char *processName, ppriority_t pr
 	newProcess->pid = global_pid;
 	newProcess->state = P_READY;
 	newProcess->stackStart = (uint64_t)malloc(STACK_SIZE);
-	newProcess->stackPointer = initStack(newProcess, processStart, newProcess->stackStart);
+	newProcess->stackPointer = initStack(newProcess, processStart, newProcess->stackStart, argc, argv);
 	newProcess->priority = priority;
 	newProcess->ground = ground;
 	if (ground == FOREGROUND)
@@ -161,7 +161,7 @@ uint64_t getStackPointer(process_t process)
 	return process->stackPointer;
 }
 
-static uint64_t initStack(process_t process, uint64_t processStart, uint64_t stackPointer)
+static uint64_t initStack(process_t process, uint64_t processStart, uint64_t stackPointer, int argc, void ** argv)
 {
 	stack_t *frame = (stack_t *)(stackPointer + STACK_SIZE - sizeof(stack_t) - 1);
 
@@ -178,8 +178,8 @@ static uint64_t initStack(process_t process, uint64_t processStart, uint64_t sta
 	frame->rsi = processStart;
 	frame->rdi = (uint64_t)process;
 	frame->rbp = 0x000;
-	frame->rdx = 0x000;
-	frame->rcx = 0x000;
+	frame->rdx = (uint64_t)argc;
+	frame->rcx = (uint64_t)argv;
 	frame->rbx = 0x000;
 	frame->rax = 0x000;
 
@@ -234,10 +234,9 @@ void printProcess(process_t process)
 	printString("/n");
 }
 
-static void processCaller(process_t process, uint64_t processStart)
+static void processCaller(process_t process, uint64_t processStart, int argc, void ** argv)
 {
-	void (*processCall)(void) = (void (*)(void))processStart;
-	(*processCall)();
+	((void (*)(int , void **))processStart)(argc, argv);
 	killCurrentProcess();
 }
 

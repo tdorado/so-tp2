@@ -16,7 +16,7 @@ typedef enum {PRIORITY_1=1, PRIORITY_2, PRIORITY_3, PRIORITY_4} ppriority_t;
 typedef struct processADT * process_t;
 
 void initProcesses();
-process_t createProcess(uint64_t processStart, char * name, ppriority_t priority, pground_t ground);
+process_t createProcess(uint64_t processStart, char *processName, int argc, void ** argv, ppriority_t priority, pground_t ground);
 void deleteProcess(process_t process);
 void setState(process_t process, pstate_t state);
 void setStateId(uint64_t pid, pstate_t state);
